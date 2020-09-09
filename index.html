@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+ <head>
+ <meta charset="utf-8">
+ <style>
+    h2 {color: red; }
+    .originalFileBtn {
+        border: 3px solid;
+        display: inline-block;
+        padding: 2px 1em;
+        position: relative;
+    }
+    .originalFileBtn input[type="file"] {
+        height: 100%;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+ </style>
+ <title>QRコード読み取りテスト</title>
+ <meta name="description" content="サイトキャプションを入力">
+ <meta name="keywords" content="サイトキーワードを,で区切って入力">
+ <!--[if lt IE 9]>
+ <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+ <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+ <![endif]-->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+ <script src="https://rawgit.com/sitepoint-editors/jsqrcode/master/src/qr_packed.js">
+ </script>
+ </head>
+ 
+ <body>
+ <h1>QRコード読み取りテストページ</h1>
+ <h2>30％ OFF<br>クーポン</h2>
+ <article>
+ <p>
+     お店にご来店・お会計の際に<br>
+    こちらの画面を店舗スタッフに<br>
+    ご提示ください。<br>
+ </p>
+ <section>
+ <p>
+    ーー店舗スタッフ操作ーー<br>
+    店舗コード入力のうえ、クーポン利用ボタンを押して下さい。<br>
+ </p>
+ </section>
+ </article>
+
+ <div class="originalFileBtn ">
+    <h3>店舗QR読取り(ここをタップ)</h3>
+    <input type=text class=qrcode-text
+    ><label class=qrcode-text-btn>
+        <input type=file
+        accept="image/*"
+        capture=environment
+        onclick="return showQRIntro();"
+        onchange="openQRCamera(this);"
+        tabindex=-1>
+    </label>
+ </div>
+
+<!-- ヒント：2つのインライン要素の間に空白行やスペースがあると、意図しない位置ずれが発生します。
+    上記では空白を削除するためにHTMLタグの終端括弧（>）を次の行に移して、
+    あとに続く要素の開始括弧（<）と密着しています。 -->
+
+ <br><br>
+ <button type="button" name="aaa" value="aaa">
+    <font size="5" color="#333399">クーポン利用</font>
+ </button>
+ </body>
+ <script>
+    function openQRCamera(node) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            node.value = "";
+            qrcode.callback = function(res) {
+            if(res instanceof Error) {
+                alert("No QR code found. Please make sure the QR code is within the camera's frame and try again.");
+            } else {
+                node.parentNode.previousElementSibling.value = res;
+            }
+            };
+            qrcode.decode(reader.result);
+        };
+        reader.readAsDataURL(node.files[0]);
+    }
+
+    function showQRIntro() {
+        return confirm("Use your camera to take a picture of a QR code.");
+    }
+ </script>
+</html>
